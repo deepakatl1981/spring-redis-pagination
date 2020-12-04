@@ -1,0 +1,25 @@
+version: '2.2'
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        APP_VERSION: 0.0.1
+    depends_on:
+      redis:
+        condition: service_started
+    ports:
+      - "8080:8080"
+  redis:
+    image: redis:3.2.10
+    ports:
+      - '6379:6379'
+    expose:
+      - '6379'
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
